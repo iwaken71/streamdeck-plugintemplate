@@ -16,14 +16,14 @@ $SD.on('connected', (jsonObj) => connected(jsonObj));
 
 function connected(jsn) {
     // Subscribe to the willAppear and other events
-    $SD.on('com.elgato.template.action.willAppear', (jsonObj) => action.onWillAppear(jsonObj));
-    $SD.on('com.elgato.template.action.keyUp', (jsonObj) => action.onKeyUp(jsonObj));
-    $SD.on('com.elgato.template.action.sendToPlugin', (jsonObj) => action.onSendToPlugin(jsonObj));
-    $SD.on('com.elgato.template.action.didReceiveSettings', (jsonObj) => action.onDidReceiveSettings(jsonObj));
-    $SD.on('com.elgato.template.action.propertyInspectorDidAppear', (jsonObj) => {
+    $SD.on('com.chp.test.action.willAppear', (jsonObj) => action.onWillAppear(jsonObj));
+    $SD.on('com.chp.test.action.keyUp', (jsonObj) => action.onKeyUp(jsonObj));
+    $SD.on('com.chp.test.action.sendToPlugin', (jsonObj) => action.onSendToPlugin(jsonObj));
+    $SD.on('com.chp.test.action.didReceiveSettings', (jsonObj) => action.onDidReceiveSettings(jsonObj));
+    $SD.on('com.chp.test.action.propertyInspectorDidAppear', (jsonObj) => {
         console.log('%c%s', 'color: white; background: black; font-size: 13px;', '[app.js]propertyInspectorDidAppear:');
     });
-    $SD.on('com.elgato.template.action.propertyInspectorDidDisappear', (jsonObj) => {
+    $SD.on('com.chp.test.action.propertyInspectorDidDisappear', (jsonObj) => {
         console.log('%c%s', 'color: white; background: red; font-size: 13px;', '[app.js]propertyInspectorDidDisappear:');
     });
 };
@@ -31,8 +31,8 @@ function connected(jsn) {
 // ACTIONS
 
 const action = {
-    settings:{},
-    onDidReceiveSettings: function(jsn) {
+    settings: {},
+    onDidReceiveSettings: function (jsn) {
         console.log('%c%s', 'color: white; background: red; font-size: 15px;', '[app.js]onDidReceiveSettings:');
 
         this.settings = Utils.getProp(jsn, 'payload.settings', {});
@@ -47,7 +47,7 @@ const action = {
          * the key.
          */
 
-         this.setTitle(jsn);
+        this.setTitle(jsn);
     },
 
     /** 
@@ -86,11 +86,11 @@ const action = {
          * This is a message sent directly from the Property Inspector 
          * (e.g. some value, which is not saved to settings) 
          * You can send this event from Property Inspector (see there for an example)
-         */ 
+         */
 
         const sdpi_collection = Utils.getProp(jsn, 'payload.sdpi_collection', {});
         if (sdpi_collection.value && sdpi_collection.value !== undefined) {
-            this.doSomeThing({ [sdpi_collection.key] : sdpi_collection.value }, 'onSendToPlugin', 'fuchsia');            
+            this.doSomeThing({ [sdpi_collection.key]: sdpi_collection.value }, 'onSendToPlugin', 'fuchsia');
         }
     },
 
@@ -120,7 +120,7 @@ const action = {
      * 
      */
 
-    setTitle: function(jsn) {
+    setTitle: function (jsn) {
         if (this.settings && this.settings.hasOwnProperty('mynameinput')) {
             console.log("watch the key on your StreamDeck - it got a new title...", this.settings.mynameinput);
             $SD.api.setTitle(jsn.context, this.settings.mynameinput);
@@ -133,10 +133,10 @@ const action = {
      * from Stream Deck.
      */
 
-    doSomeThing: function(inJsonData, caller, tagColor) {
+    doSomeThing: function (inJsonData, caller, tagColor) {
         console.log('%c%s', `color: white; background: ${tagColor || 'grey'}; font-size: 15px;`, `[app.js]doSomeThing from: ${caller}`);
         // console.log(inJsonData);
-    }, 
+    },
 
 
 };
